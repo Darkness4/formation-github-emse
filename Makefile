@@ -28,28 +28,14 @@ LFLAGS?=-Wall -Wextra $(INC) -L./$(LIBDIR)
 SOURCES:=$(wildcard $(SRCDIR)/*.cpp)
 OBJECTS:=$(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
-SOURCES_MATRICE:=$(wildcard $(SRCDIR)/matrice/*.cpp)
-
-OBJECTS_MATRICE:=$(SOURCES_MATRICE:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-OBJECTS+=$(OBJECTS_MATRICE)
-
-LIB_MATRICE:=$(LIBDIR)/matrice.a
-
-
 # Cleaner
 rm = rm -rf
 
 # Link
-$(BINDIR)/$(TARGET): $(OBJDIR)/main.o $(LIB_MATRICE)
+$(BINDIR)/$(TARGET): $(OBJDIR)/main.o $(OBJECTS)
 	@mkdir -p $(shell dirname $@)
 	$(LINKER) $(LFLAGS) $^ -o $@
 	@echo "Linking $@ complete!"
-
-# Static libraries
-$(LIB_MATRICE): $(OBJECTS_MATRICE)
-	@mkdir -p $(shell dirname $@)
-	ar rcs $@ $^
-	@echo "Linked "$@" successfully!"
 
 # Compile forEach C++
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
